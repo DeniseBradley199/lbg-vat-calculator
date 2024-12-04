@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
         steps {
           // Get some code from a GitHub repository
-          git branch: 'main', url: 'https://github.com/DeniseBradley199/lbg-vat-calculator.git'
+          git branch: 'main', url: 'https://github.com/DeniseBradley199/lbg-python-flask-sonarqube.git'
         }
     }
     stage('SonarQube Analysis') {
@@ -13,10 +13,13 @@ pipeline {
         scannerHome = tool 'sonarqube'
       }
         steps {
-            withSonarQubeEnv('sonarqube-1') {        
+            withSonarQubeEnv('sonar-qube-1') {        
               sh "${scannerHome}/bin/sonar-scanner"
-            }   
+        }
+        timeout(time: 10, unit: 'MINUTES'){
+          waitForQualityGate abortPipeline: true
         }
     }
   }
+}
 }
